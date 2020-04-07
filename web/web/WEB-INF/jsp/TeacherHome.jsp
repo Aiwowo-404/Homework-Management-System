@@ -17,7 +17,7 @@
         HashMap<String,String> hashMap=new HashMap<String, String>();
         hashMap=homework.get(i);
         p+="<tr>";
-        p+="<td style='width:20%';>"+hashMap.get("sname")+"</td>";
+        p+="<td style='width:20%';>"+hashMap.get("name")+"</td>";
         p+="<td style='width:30%';>"+hashMap.get("homework")+"</td>";
         p+="<td style='width:30%';>"+hashMap.get("flag")+"</td>";
         if(hashMap.get("feedback")!=null){
@@ -73,17 +73,18 @@
     <div style="display: inline-block">
         <button id="release">发布作业</button>
         <button id="show">查看作业完成情况</button>
+        <button id="logout">注销</button>
     </div>
     <div id="homework" style="margin-top: 50px;display: none">
-        <form action="/releaseHomework" method="post">
+        <form id="form">
             <label>作业内容</label>
             <textarea name="homework" style="width: 100%;height: 200px;" required></textarea>
             <button id="choose" style="margin-top: 20px" type="button">选择学生</button>
             <div id="addstudent" style="display: none;">
                 <%=o%>
             </div>
-            <button type="submit">提交发布</button>
         </form>
+        <button type="submit" id="go">提交发布</button>
     </div>
     <div id="HomeworkState" style="margin-top: 50px;display: none">
         <table style="width: 100%;text-align: center">
@@ -108,6 +109,32 @@
         } else {
             $("#addstudent").hide();
         }
+    });
+    $("#go").click(function () {
+        $.ajax({
+            url:"/teacher/releaseHomework",
+            type:"post",
+            data:$("#form").serialize(),
+            success:function (data) {
+                if(data=="true"){
+                    alert("发布成功");
+                    window.location.reload();
+                }else {
+                    alert("发布失败");
+                }
+            }
+        });
+    });
+    $("#logout").click(function () {
+        $.ajax({
+            url:"/teacher/logout",
+            type:"post",
+            success:function (data) {
+                if(data=="true"){
+                    window.location.reload();
+                }
+            }
+        });
     });
 </script>
 </html>

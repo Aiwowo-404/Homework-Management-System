@@ -12,7 +12,7 @@
         HashMap<String,String> hashMap=new HashMap<String, String>();
         hashMap=homework.get(i);
         p+="<tr>";
-        p+="<td style='width:20%';>"+hashMap.get("tname")+"</td>";
+        p+="<td style='width:20%';>"+hashMap.get("name")+"</td>";
         p+="<td style='width:30%';>"+hashMap.get("homework")+"</td>";
         p+="<td style='width:30%;display:none;'>"+hashMap.get("tid")+"</td>";
         p+="<td style='width:30%;display:none;'>"+hashMap.get("sid")+"</td>";
@@ -71,12 +71,13 @@
 <div style="margin:0 auto;width: 50%;">
     <div style="display: inline-block">
         <button id="show">查看作业</button>
+        <button id="logout">注销</button>
     </div>
     <div id="homework" style="margin-top: 50px;display: none">
         <table style="width: 100%">
             <%=p%>
         </table>
-        <form id="form" action="/submitHomework" method="post" style="margin-top: 50px;display: none;">
+        <form id="form" style="margin-top: 50px;display: none;">
             <label>作业内容</label>
             <div>
                  <textarea id="hom" name="homework" readonly style="width: 100%;height: 200px;"></textarea>
@@ -86,8 +87,8 @@
             <input id="tid" type="text" name="tid" hidden>
             <label>回答</label>
             <textarea name="feedback" style="width: 100%;height: 200px;" required></textarea>
-            <button type="submit">提交</button>
         </form>
+        <button type="submit" id="go">提交</button>
     </div>
 </div>
 
@@ -103,5 +104,31 @@
         $("#sid").val($(obj).parent().parent().children("td").eq(3).html());
         $("#form").show();
     }
+    $("#go").click(function () {
+        $.ajax({
+            url:"/student/submitHomework",
+            type:"post",
+            data:$("#form").serialize(),
+            success:function (data) {
+                if(data=="true"){
+                    alert("提交成功");
+                    window.location.reload();
+                }else {
+                    alert("提交失败");
+                }
+            }
+        });
+    });
+    $("#logout").click(function () {
+        $.ajax({
+            url:"/student/logout",
+            type:"post",
+            success:function (data) {
+                if(data=="true"){
+                    window.location.reload();
+                }
+            }
+        });
+    });
 </script>
 </html>

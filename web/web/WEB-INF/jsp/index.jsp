@@ -112,17 +112,17 @@
 <script>
     $(document).ready(function () {
         $("#teacher").css("background-color","#535c68");
-        $("#form").attr("action","/goLoginTeacher");
+        $("#form").attr("action","/teacher/goLoginTeacher");
     });
     $("#teacher").click(function () {
         $("#teacher").css("background-color","#535c68");
         $("#student").css("background-color","silver");
-        $("#form").attr("action","/goLoginTeacher");
+        $("#form").attr("action","/teacher/goLoginTeacher");
     });
     $("#student").click(function () {
         $("#student").css("background-color","#535c68");
         $("#teacher").css("background-color","silver");
-        $("#form").attr("action","/goLoginStudent");
+        $("#form").attr("action","/student/goLoginStudent");
     });
 </script>
 </html>
