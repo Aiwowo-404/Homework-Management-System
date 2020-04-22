@@ -38,6 +38,12 @@
             <version>0.9.5.2</version>
         </dependency>
 
+        <!--导入aspectJ-->
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>1.9.5</version>
+        </dependency>
         <!--Mybatis-->
         <dependency>
             <groupId>org.mybatis</groupId>

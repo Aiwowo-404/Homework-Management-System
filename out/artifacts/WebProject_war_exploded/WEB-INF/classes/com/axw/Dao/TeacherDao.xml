@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.axw.Dao.TeacherDao">
+    <select id="getTeacherById" resultType="com.axw.Pojo.Teacher">
+        select * from axw.teacher where id = #{tid}
+    </select>
+</mapper>
