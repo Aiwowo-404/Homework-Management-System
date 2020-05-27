@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<!-- saved from url=(0052)http://getbootstrap.com/docs/4.0/examples/dashboard/ -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <meta content="" name="description">
+    <meta content="" name="author">
+
+    <title>发布作业</title>
+    <!-- Bootstrap core CSS -->
+    <link th:href="@{/asserts/css/bootstrap.min.css}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link th:href="@{/asserts/css/dashboard.css}" rel="stylesheet">
+    <link href="https://cdn.bootcdn.net/ajax/libs/bootstrap-multiselect/0.9.15/css/bootstrap-multiselect.css" rel="stylesheet">
+    <style type="text/css">
+        /* Chart.js */
+        button {
+            border-radius: 5px;
+            background-color: aqua;
+            color: #fff;
+            border: none;
+            font-size: 15px;
+            padding: 10px 25px 10px 25px;
+        }
+
+        button:hover {
+            background-color: darkturquoise;
+        }
+
+
+        @-webkit-keyframes chartjs-render-animation {
+            from {
+                opacity: 0.99
+            }
+            to {
+                opacity: 1
+            }
+        }
+
+        @keyframes chartjs-render-animation {
+            from {
+                opacity: 0.99
+            }
+            to {
+                opacity: 1
+            }
+        }
+
+        .chartjs-render-monitor {
+            -webkit-animation: chartjs-render-animation 0.001s;
+            animation: chartjs-render-animation 0.001s;
+        }
+    </style>
+</head>
+
+<body>
+<!--  导入上部navbar上边栏 -->
+<div th:replace="common/teacher_template::nav-bar"></div>
+
+<div class="container-fluid">
+    <div class="row">
+        <!--导入右边侧边栏-->
+        <div th:replace="common/teacher_template::side-bar(active='course')"></div>
+
+        <main class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4" role="main">
+            <div style="margin:0 auto;width: 50%;">
+                <div style="display: inline-block">
+                    <button id="show">查看作业完成情况</button>
+                    <button id="release">发布作业</button>
+                </div>
+                <div id="homework" style="margin-top: 50px;display: none">
+                    <form id="form" th:action="${'/teacher/course/'+course.id}" method="post">
+                        <div class="form-group">
+                            <label>作业题目</label>
+                            <input id="name" type="text" name="name" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>作业内容</label>
+                            <textarea id="content" name="content" class="form-control" rows="7" required></textarea>
+                        </div>
+                        <select id="students" name="students" multiple="multiple">
+                            <option th:each="student:${students}" th:value="${student.id}" th:text="${student.name}"></option>
+                        </select>
+                    </form>
+                    <div class="row">
+                        <button id="submit" style="margin: 0 auto">提交发布</button>
+                    </div>
+                </div>
+                <div id="HomeworkState" style="margin-top: 50px;">
+                    <table class="table table-striped table-sm" id="homework-table">
+                        <thead>
+                        <tr>
+                            <th>作业名</th>
+                            <th>布置学生人数</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="homework : ${homeworks}">
+                            <td th:text="${homework.name}"></td>
+                            <td th:text="${homework.nums}"></td>
+                            <td><a class="btn btn-sm btn-primary" th:href="${'homework/'+homework.courseid+'/'+homework.name}">查看</a></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://cdn.bootcss.com/jquery/3.5.0/jquery.js"></script>
+<script th:src="@{/asserts/js/popper.min.js}" type="text/javascript"></script>
+<script th:src="@{/asserts/js/bootstrap.min.js}" type="text/javascript"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.js"></script>
+<!-- Icons -->
+<script th:src="@{/asserts/js/feather.min.js}" type="text/javascript"></script>
+<script>
+    $("#release").click(function () {
+        $("#homework").show();
+        $("#HomeworkState").hide();
+    });
+    $("#show").click(function () {
+        $("#homework").hide();
+        $("#HomeworkState").show();
+    })
+    $('#students').multiselect();
+
+    $("#submit").click(function(){
+        var students = "";
+        $("#students option:selected").each(function(){
+           students+=$(this).val()+",";
+        });
+        if(students.lastIndexOf(',') >0) students = students.substring(0, students.length - 1);
+        // alert($("#confForm").serialize());
+        $.ajax({
+            type:"post",
+            url:$('#form').attr('action'),
+            data:{
+                "name":$("#name").val(),
+                "content":$("#content").val(),
+                "students":students,
+            },
+            success:function(data){
+                window.location.reload();
+            }
+        });
+    });
+</script>
+</body>
+
+</html>

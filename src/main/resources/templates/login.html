@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <meta content="" name="description">
+    <meta content="" name="author">
+    <title>登录</title>
+    <!-- Bootstrap core CSS -->
+    <link href="/asserts/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="/asserts/css/signin.css" rel="stylesheet">
+</head>
+
+<body class="text-center">
+<form id="submitform" th:action="@{/user/student/login}" class="form-signin" method="post">
+    <img alt="" class="mb-4" height="72" src="/asserts/img/bootstrap-solid.svg" width="72">
+    <h1 class="h3 mb-3 font-weight-normal">请登录</h1>
+    <p th:text="${msg}" th:if="${msg} ne null" style="color: red"></p>
+    <label class="sr-only">UserID</label>
+    <input name="id" autofocus="" class="form-control" placeholder="UserID" required="" type="text">
+    <label class="sr-only">Password</label>
+    <input name="password" class="form-control" placeholder="Password" required="" type="password">
+    <div class="checkbox mb-3">
+        <label>
+            <input id="student" type="radio" name="choice" checked> 学生
+        </label>
+        <label>
+            <input id="teacher" type="radio" name="choice"> 老师
+        </label>
+    </div>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">登录</button>
+    <p class="mt-5 mb-3 text-muted">© 2017-2018</p>
+    <a class="btn btn-sm">中文</a>
+    <a class="btn btn-sm">English</a>
+</form>
+
+</body>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+    $('#student').click(function(){
+        $('#submitform').attr('action','/user/student/login');
+    });
+    $('#teacher').click(function(){
+        $('#submitform').attr('action','/user/teacher/login');
+    });
+</script>
+</html>

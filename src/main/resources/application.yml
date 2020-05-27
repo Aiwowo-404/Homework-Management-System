@@ -1,0 +1,9 @@
+spring:
+  thymeleaf:
+    cache: false
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://cdb-ev3lbs2q.cd.tencentcdb.com:10136/homework_management_system
+    username: root
+    password: axw112630
+    driver-class-name: com.mysql.cj.jdbc.Driver
