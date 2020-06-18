@@ -55,22 +55,22 @@
             <div class="row col-12">
                 <div class="col-4">
                     <p>作业名：</p>
-                    <p th:text="${homework.name}"></p>
+                    <p th:text="${homework.data.name}"></p>
                 </div>
                 <div class="col-4">
                     <p>作业内容：</p>
-                    <p th:text="${homework.content}"></p>
+                    <p th:text="${homework.data.content}"></p>
                 </div>
                 <div class="col-4">
                     <p>作业资源：</p>
-                    <a th:if="${homework.resource!=null}" th:text="${homework.resource}"></a>
-                    <p th:if="${homework.resource==null}">无</p>
+                    <a th:if="${homework.data.resource!=null}" th:text="${homework.data.resource}"></a>
+                    <p th:if="${homework.data.resource==null}">无</p>
                 </div>
             </div>
 
-            <form th:action="${'/student/course/'+homework.courseid+'/dohomework/'+homework.id}" method="post">
+            <form th:action="${'/student/dohomework/'+homework.data.id}" method="post">
                 <div class="row">
-                    <textarea class="form-control" rows="7" name="answer"></textarea>
+                    <textarea class="form-control" rows="7" name="anwser" th:text="${homework.data.answer}"></textarea>
                 </div>
                 <div class="row col-12" style="text-align: center;padding: 10px">
                     <button type="submit" class="btn btn-info btn-large" style="display: block;margin: 0 auto;">提交作业</button>

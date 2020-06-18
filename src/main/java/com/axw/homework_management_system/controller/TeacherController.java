@@ -1,11 +1,8 @@
 package com.axw.homework_management_system.controller;
 
-import com.axw.homework_management_system.dto.HomeworkByNameDto;
-import com.axw.homework_management_system.entities.Course;
-import com.axw.homework_management_system.entities.Homework;
-import com.axw.homework_management_system.entities.Student;
-import com.axw.homework_management_system.entities.Teacher;
+import com.axw.homework_management_system.entities.*;
 import com.axw.homework_management_system.service.TeacherService;
+import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,45 +19,54 @@ public class TeacherController {
     @Autowired
     private TeacherService teacherService;
 
-    @RequestMapping("/index")
+    @GetMapping("/index")
     public String index(){
         return "teacher/index";
     }
 
-    @RequestMapping("/course")
-    public String course(HttpServletRequest request, Model model){
-        HttpSession session = request.getSession();
-        Teacher teacher = (Teacher) session.getAttribute("teacher");
-        List<Course> courses = teacherService.queryAllCourse(teacher.getId());
-        model.addAttribute("courses",courses);
-        return "teacher/course";
-    }
 
-    @RequestMapping("/logout")
-    public String StudentLogout(HttpServletRequest request){
+    @GetMapping("/logout")
+    public String TeacherLogout(HttpServletRequest request){
         HttpSession session = request.getSession();
         session.removeAttribute("teacher");
         return "redirect:/login";
     }
 
-    @GetMapping("/course/{courseid}")
-    public String gopublish(@PathVariable("courseid")String courseid,Model model){
-        List<Student> students = teacherService.queryAllStudentByCourse(courseid);
-        Course course =teacherService.queryCourseById(courseid);
-        List<HomeworkByNameDto> homeworkByNameDtos = teacherService.getHomeworkByName(courseid);
-        model.addAttribute("homeworks",homeworkByNameDtos);
-        model.addAttribute("students",students);
-        model.addAttribute("course",course);
+    @GetMapping("/homework")
+    public String TeacherHomework(@RequestParam(name = "page",defaultValue = "1")int page,
+                                  @RequestParam(name = "size",defaultValue = "8")int size,
+                                  Model model,
+                                  HttpServletRequest request){
+        HttpSession session = request.getSession();
+        Teacher teacher = (Teacher) session.getAttribute("teacher");
+        CommonResult commonResult = teacherService.homeworkCenter(teacher.getId(),page,size);
+        model.addAttribute("homework",commonResult);
+        return "teacher/homework";
+    }
+
+    @GetMapping("/publish")
+    public String PublishHomework(Model model){
+        CommonResult commonResult = teacherService.getStudents();
+        model.addAttribute("students",commonResult);
         return "teacher/publish";
     }
 
-    @PostMapping("/course/{courseid}")
-    public String publish(@PathVariable("courseid")String courseid, HttpServletRequest request){
-        String students = request.getParameter("students");
-        String name = request.getParameter("name");
-        String content = request.getParameter("content");
+    @PostMapping("/releasehomework")
+    @ResponseBody
+    public CommonResult releaseHomework(@RequestParam("name")String name,
+                                  @RequestParam("content")String content,
+                                  @RequestParam("students")String students,HttpServletRequest request){
+        HttpSession session = request.getSession();
+        Teacher teacher = (Teacher) session.getAttribute("teacher");
         String[] studentids = students.split(",");
-        teacherService.addNewHomework(studentids,courseid,name,content);
-        return "redirect:/teacher/course/"+courseid;
+        CommonResult commonResult = teacherService.addNewHomework(studentids,teacher.getId(),name,content);
+        return commonResult;
+    }
+
+    @GetMapping("/preview/{homeworkid}")
+    public String previewHomework(@PathVariable("homeworkid")String homeworkid,Model model){
+        CommonResult commonResult = teacherService.queryHomeworkById(homeworkid);
+        model.addAttribute("homework",commonResult);
+        return "teacher/preview";
     }
 }
